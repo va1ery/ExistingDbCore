@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExistingDbCore
 {
+    [Table("UnitMeasure", Schema = "Production")]
     public partial class UnitMeasure
     {
         public UnitMeasure()
@@ -13,13 +16,22 @@ namespace ExistingDbCore
             ProductWeightUnitMeasureCodeNavigation = new HashSet<Product>();
         }
 
+        [Key]
+        [StringLength(3)]
         public string UnitMeasureCode { get; set; }
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime ModifiedDate { get; set; }
 
+        [InverseProperty("UnitMeasureCodeNavigation")]
         public virtual ICollection<BillOfMaterials> BillOfMaterials { get; set; }
+        [InverseProperty(nameof(Product.SizeUnitMeasureCodeNavigation))]
         public virtual ICollection<Product> ProductSizeUnitMeasureCodeNavigation { get; set; }
+        [InverseProperty("UnitMeasureCodeNavigation")]
         public virtual ICollection<ProductVendor> ProductVendor { get; set; }
+        [InverseProperty(nameof(Product.WeightUnitMeasureCodeNavigation))]
         public virtual ICollection<Product> ProductWeightUnitMeasureCodeNavigation { get; set; }
     }
 }
